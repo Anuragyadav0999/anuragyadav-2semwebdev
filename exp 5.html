@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>exp5</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="text-align: center;">
+    <h2>Employee Salary Management System</h2>
+    <div class="container">
+        <input type="text" id="name" placeholder="Employee Name"><br><br>
+        <input type="text" id="empid" placeholder="Employee ID"><br><br>
+        <input type="number" id="salary" placeholder="Employee Salary"><br><br>
+        <input type="text" id="department" placeholder="Employee Department"><br><br>
+        <button onclick="addEmployee()">Add Employee</button><br><br>
+        <button onclick="displayEmployees()">Display Employees</button>
+        <button onclick="filterSalary()">Salary &gt; 50000</button>
+        <button onclick="totalSalary()">Total Salary</button>
+        <button onclick="averageSalary()">Average Salary</button><br><br>
+        <button onclick="countByDepartment()">Count By Department</button><br><br>
+        <div id="output">Anshuman Singh</div> 
+    </div>
+    <script src="main.jsx"></script>  
+</body>
+</html>
