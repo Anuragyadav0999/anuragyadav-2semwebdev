@@ -1,0 +1,265 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Management System</title>
+</head>
+<body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+
+<div style="max-width:1200px;margin:auto;background:white;padding:20px;border-radius:10px;box-shadow:0px 0px 10px gray;">
+
+    <h1 style="text-align:center;color:#333;">
+        Attendance Management System
+    </h1>
+
+    <!-- Add Student -->
+
+    <div style="display:flex;gap:10px;margin-bottom:15px;">
+
+        <input
+        type="text"
+        id="studentName"
+        placeholder="Enter Student Name"
+        style="flex:1;padding:10px;border:1px solid #ccc;border-radius:5px;">
+
+        <button
+        onclick="addStudent()"
+        style="background:green;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;">
+            Add Student
+        </button>
+
+    </div>
+
+    <!-- Search Student -->
+
+    <input
+    type="text"
+    id="search"
+    placeholder="Search Student..."
+    onkeyup="searchStudent()"
+    style="width:100%;padding:10px;margin-bottom:20px;border:1px solid #ccc;border-radius:5px;">
+
+    <!-- Report Dashboard -->
+
+    <div
+    style="display:flex;justify-content:space-around;background:#e8f0fe;padding:15px;border-radius:10px;margin-bottom:20px;">
+
+        <h3>Total Students:
+            <span id="totalStudents">0</span>
+        </h3>
+
+        <h3>Total Present:
+            <span id="totalPresent">0</span>
+        </h3>
+
+        <h3>Total Absent:
+            <span id="totalAbsent">0</span>
+        </h3>
+
+    </div>
+
+    <!-- Attendance Table -->
+
+    <table
+    style="width:100%;border-collapse:collapse;text-align:center;">
+
+        <thead>
+
+        <tr style="background:#007bff;color:white;">
+
+            <th style="padding:10px;border:1px solid #ddd;">Roll No</th>
+            <th style="padding:10px;border:1px solid #ddd;">Student Name</th>
+            <th style="padding:10px;border:1px solid #ddd;">Present Days</th>
+            <th style="padding:10px;border:1px solid #ddd;">Absent Days</th>
+            <th style="padding:10px;border:1px solid #ddd;">Attendance %</th>
+            <th style="padding:10px;border:1px solid #ddd;">Actions</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody id="studentTable">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script>
+
+let students = [];
+let rollNo = 1;
+
+function addStudent(){
+
+    let name =
+    document.getElementById("studentName").value;
+
+    if(name.trim() === ""){
+        alert("Please Enter Student Name");
+        return;
+    }
+
+    students.push({
+        roll: rollNo++,
+        name: name,
+        presentDays: 0,
+        absentDays: 0
+    });
+
+    document.getElementById("studentName").value="";
+
+    displayStudents();
+}
+
+function displayStudents(){
+
+    let table =
+    document.getElementById("studentTable");
+
+    table.innerHTML="";
+
+    students.forEach((student,index)=>{
+
+        let total =
+        student.presentDays +
+        student.absentDays;
+
+        let percentage =
+        total === 0 ? 0 :
+        ((student.presentDays/total)*100).toFixed(1);
+
+        table.innerHTML += `
+
+        <tr>
+
+        <td style="padding:10px;border:1px solid #ddd;">
+        ${student.roll}
+        </td>
+
+        <td style="padding:10px;border:1px solid #ddd;">
+        ${student.name}
+        </td>
+
+        <td style="padding:10px;border:1px solid #ddd;color:green;">
+        ${student.presentDays}
+        </td>
+
+        <td style="padding:10px;border:1px solid #ddd;color:red;">
+        ${student.absentDays}
+        </td>
+
+        <td style="padding:10px;border:1px solid #ddd;">
+        ${percentage}%
+        </td>
+
+        <td style="padding:10px;border:1px solid #ddd;">
+
+        <button
+        onclick="markPresent(${index})"
+        style="background:green;color:white;border:none;padding:6px 10px;border-radius:5px;cursor:pointer;">
+        Present
+        </button>
+
+        <button
+        onclick="markAbsent(${index})"
+        style="background:red;color:white;border:none;padding:6px 10px;border-radius:5px;cursor:pointer;">
+        Absent
+        </button>
+
+        <button
+        onclick="deleteStudent(${index})"
+        style="background:black;color:white;border:none;padding:6px 10px;border-radius:5px;cursor:pointer;">
+        Delete
+        </button>
+
+        </td>
+
+        </tr>
+
+        `;
+    });
+
+    updateReport();
+}
+
+function markPresent(index){
+    students[index].presentDays++;
+    displayStudents();
+}
+
+function markAbsent(index){
+    students[index].absentDays++;
+    displayStudents();
+}
+
+function deleteStudent(index){
+    students.splice(index,1);
+    displayStudents();
+}
+
+function searchStudent(){
+
+    let search =
+    document.getElementById("search")
+    .value.toLowerCase();
+
+    let rows =
+    document.querySelectorAll("#studentTable tr");
+
+    rows.forEach(row=>{
+
+        if(
+        row.innerText.toLowerCase()
+        .includes(search)
+        ){
+            row.style.display="";
+        }
+        else{
+            row.style.display="none";
+        }
+
+    });
+
+}
+
+function updateReport(){
+
+    let totalStudents =
+    students.length;
+
+    let totalPresent = 0;
+    let totalAbsent = 0;
+
+    students.forEach(student=>{
+
+        totalPresent +=
+        student.presentDays;
+
+        totalAbsent +=
+        student.absentDays;
+
+    });
+
+    document.getElementById(
+    "totalStudents"
+    ).innerText =
+    totalStudents;
+
+    document.getElementById(
+    "totalPresent"
+    ).innerText =
+    totalPresent;
+
+    document.getElementById(
+    "totalAbsent"
+    ).innerText =
+    totalAbsent;
+}
+
+</script>
+
+</body>
+</html>
+```
